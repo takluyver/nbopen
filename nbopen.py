@@ -10,9 +10,12 @@ from IPython.html import notebookapp
 from IPython.html.utils import url_path_join
 
 def find_best_server(filename, profile='default'):
-    return max([si for si in notebookapp.list_running_servers(profile=profile) \
-                    if filename.startswith(si['notebook_dir'])],
-               key=lambda si: len(si['notebook_dir'])) or None
+    servers = [si for si in notebookapp.list_running_servers(profile=profile) \
+               if filename.startswith(si['notebook_dir'])]
+    try:
+        return max(servers, key=lambda si: len(si['notebook_dir']))
+    except ValueError:
+        return None
 
 class OutsideHomeDir(ValueError): pass
 
