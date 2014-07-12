@@ -12,8 +12,7 @@ from IPython.html.utils import url_path_join
 def find_best_server(filename, profile='default'):
     return max([si for si in notebookapp.list_running_servers(profile=profile) \
                     if filename.startswith(si['notebook_dir'])],
-               key=lambda si: len(si['notebook_dir']),
-               default=None)
+               key=lambda si: len(si['notebook_dir'])) or None
 
 class OutsideHomeDir(ValueError): pass
 
@@ -21,7 +20,7 @@ def nbopen(filename, profile='default'):
     filename = os.path.abspath(filename)
     home_dir = os.path.expanduser('~')
     server_inf = find_best_server(filename, profile)
-    if server_inf:
+    if server_inf is not None:
         print("Using existing server at", server_inf['notebook_dir'])
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
         url = url_path_join(server_inf['url'], 'notebooks', path)
