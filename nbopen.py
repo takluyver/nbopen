@@ -8,6 +8,8 @@ import webbrowser
 from IPython.html import notebookapp
 from IPython.html.utils import url_path_join
 
+__version__ = '0.2'
+
 def find_best_server(filename, profile='default'):
     servers = [si for si in notebookapp.list_running_servers(profile=profile) \
                if filename.startswith(si['notebook_dir'])]
