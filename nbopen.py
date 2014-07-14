@@ -3,7 +3,6 @@
 import argparse
 import os.path
 import sys
-import threading
 import webbrowser
 
 from IPython.html import notebookapp
