@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=IPython Notebook
+NoDisplay=true  # This is for opening files, not launching the notebook from a menu
+Exec=nbopen %f
+Terminal=false
+MimeType=text/x-ipynb

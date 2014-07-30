@@ -11,3 +11,6 @@ Installation::
 Usage::
 
     nbopen AwesomeNotebook.ipynb
+
+To integrate with Linux/BSD file managers, so you can double click on notebooks
+to open them, clone the repository and run ``./xdg-install.sh``.
