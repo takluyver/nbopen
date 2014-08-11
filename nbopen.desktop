@@ -2,7 +2,8 @@
 Type=Application
 Version=1.0
 Name=IPython Notebook
-NoDisplay=true  # This is for opening files, not launching the notebook from a menu
+# This is for opening files, not launching the notebook from a menu
+NoDisplay=true
 Exec=nbopen %f
 Terminal=false
-MimeType=text/x-ipynb
+MimeType=text/x-ipynb;
