@@ -6,4 +6,4 @@ Name=IPython Notebook
 NoDisplay=true
 Exec=nbopen %f
 Terminal=false
-MimeType=text/x-ipynb;
+MimeType=application/x-ipynb+json;
