@@ -13,7 +13,7 @@ setup(name='nbopen',
       author_email="thomas@kluyver.me.uk",
       url="https://github.com/takluyver/nbopen",
       py_modules=['nbopen'],
-      scripts=['nbopen'],
+      scripts=['nbopen.py'],
       classifiers=[
           "Framework :: IPython",
           "License :: OSI Approved :: BSD License",
