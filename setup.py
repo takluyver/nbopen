@@ -2,11 +2,38 @@
 import sys
 from distutils.core import setup
 
+
 def main(argv=None):
     if argv is not None:
         # sarcastic message about distutils here
         saved_argv = sys.argv[:]
         sys.argv[1:] = argv
+
+    if sys.platform == 'darwin':
+        import setuptools
+        Plist = dict(CFBundleName='nbopen',
+                CFBundleShortVersionString='0.2',
+                CFBundleVersion='0.2',
+                CFBundleIdentifier='org.jupyter.nbopen',
+                CFBundleDevelopmentRegion='English',
+                CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=["ipynb"],
+                                         CFBundleTypeName="IPython Notebook",
+                                         CFBundleTypeRole="Editor"),
+                                    ]
+             )
+        extra_options = dict(
+            app=['nbopen.py'],
+            options={'py2app': {
+                'argv_emulation': True,
+                'packages': ['nbopen'],
+                'alias': True,
+                'plist': Plist
+            }},
+            setup_requires=['py2app']
+        )
+
+    else:
+        extra_options = {}
 
     try:
         with open('README.rst') as f:
@@ -27,7 +54,7 @@ def main(argv=None):
                   "Programming Language :: Python :: 2",
                   "Programming Language :: Python :: 3",
                  ],
-             )
+             **extra_options)
 
     finally:
         if argv is not None:
