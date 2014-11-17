@@ -17,4 +17,4 @@ to open them, clone the repository and run:
 
 * Linux/BSD: ``./xdg-install.sh``.
 * Windows: ``python win-install.py``
-* Mac: Pull requests welcome!
+* Mac: ``./osx-install.sh``
