@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-#iconutil -c icns nbopen.iconset
+./osx-make-iconset.sh
 
 python3 setup.py install
 python3 setup.py py2app
