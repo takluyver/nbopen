@@ -18,6 +18,7 @@ def main(argv=None):
                 CFBundleDevelopmentRegion='English',
                 CFBundleDocumentTypes=[dict(CFBundleTypeExtensions=["ipynb"],
                                          CFBundleTypeName="IPython Notebook",
+                                         CFBundleTypeIconFile="nbopen",
                                          CFBundleTypeRole="Editor"),
                                     ]
              )
@@ -27,7 +28,8 @@ def main(argv=None):
                 'argv_emulation': True,
                 'packages': ['nbopen'],
                 'alias': True,
-                'plist': Plist
+                'plist': Plist,
+                'iconfile': 'nbopen.icns'
             }},
             setup_requires=['py2app']
         )
