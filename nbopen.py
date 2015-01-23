@@ -32,6 +32,7 @@ def nbopen(filename, profile='default'):
     elif filename.startswith(home_dir):
         print("Starting new server")
         notebookapp.launch_new_instance(file_to_run=os.path.abspath(filename),
+                                        notebook_dir=home_dir,
                                         open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
                                        )
