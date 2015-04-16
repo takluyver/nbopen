@@ -31,10 +31,14 @@ def nbopen(filename, profile='default'):
         webbrowser.open(url, new=2)
     elif filename.startswith(home_dir):
         print("Starting new server")
-        notebookapp.launch_new_instance(file_to_run=os.path.abspath(filename),
-                                        notebook_dir=home_dir,
-                                        open_browser=True,
+        filename = os.path.abspath(filename)
+        if os.path.isdir(filename):
+            kw = {'notebook_dir': filename}
+        else:
+            kw = {'file_to_run': filename}
+        notebookapp.launch_new_instance(open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
+                                        **kw
                                        )
     else:
         raise OutsideHomeDir
