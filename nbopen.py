@@ -3,6 +3,7 @@
 import argparse
 import os.path
 import sys
+import warnings
 import webbrowser
 
 from IPython.html import notebookapp
@@ -11,7 +12,11 @@ from IPython.html.utils import url_path_join
 __version__ = '0.2'
 
 def find_best_server(filename, profile='default'):
-    servers = [si for si in notebookapp.list_running_servers(profile=profile) \
+    kwargs = {}
+    if profile != 'default':
+        warnings.warn("Jupyter doesn't have profiles")
+        kwargs['profile'] = profile
+    servers = [si for si in notebookapp.list_running_servers(**kwargs) \
                if filename.startswith(si['notebook_dir'])]
     try:
         return max(servers, key=lambda si: len(si['notebook_dir']))
@@ -42,7 +47,7 @@ def nbopen(filename, profile='default'):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('-p', '--profile', default='default',
-                    help='The IPython profile with which to open this notebook')
+                    help=argparse.SUPPRESS)
     ap.add_argument('filename', help='The notebook file to open')
     
     args = ap.parse_args(argv)
