@@ -6,8 +6,12 @@ import sys
 import warnings
 import webbrowser
 
-from IPython.html import notebookapp
-from IPython.html.utils import url_path_join
+try:
+    from jupyter_notebook import notebookapp
+    from jupyter_notebook.utils import url_path_join
+except ImportError:
+    from IPython.html import notebookapp
+    from IPython.html.utils import url_path_join
 
 __version__ = '0.2'
 
