@@ -7,8 +7,8 @@ import warnings
 import webbrowser
 
 try:
-    from jupyter_notebook import notebookapp
-    from jupyter_notebook.utils import url_path_join
+    from notebook import notebookapp
+    from notebook.utils import url_path_join
 except ImportError:
     from IPython.html import notebookapp
     from IPython.html.utils import url_path_join
