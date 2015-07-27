@@ -27,7 +27,6 @@ def find_best_server(filename, profile='default'):
     except ValueError:
         return None
 
-class OutsideHomeDir(ValueError): pass
 
 def nbopen(filename, profile='default'):
     filename = os.path.abspath(filename)
@@ -38,15 +37,18 @@ def nbopen(filename, profile='default'):
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
         url = url_path_join(server_inf['url'], 'notebooks', path)
         webbrowser.open(url, new=2)
-    elif filename.startswith(home_dir):
+    else:
+        if filename.startswith(home_dir):
+            nbdir = home_dir
+        else:
+            nbdir = os.path.dirname(filename)
+
         print("Starting new server")
         notebookapp.launch_new_instance(file_to_run=os.path.abspath(filename),
-                                        notebook_dir=home_dir,
+                                        notebook_dir=nbdir,
                                         open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
                                        )
-    else:
-        raise OutsideHomeDir
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
@@ -55,11 +57,8 @@ def main(argv=None):
     ap.add_argument('filename', help='The notebook file to open')
     
     args = ap.parse_args(argv)
-    try:
-        nbopen(args.filename, args.profile)
-    except OutsideHomeDir:
-        sys.exit("I don't currently open notebooks outside your home directory, "
-                 "for security reasons.")
+
+    nbopen(args.filename, args.profile)
 
 if __name__ == '__main__':
     main()
