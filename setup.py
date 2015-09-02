@@ -42,7 +42,7 @@ def main(argv=None):
             readme = f.read()
 
         setup(name='nbopen',
-              version='0.2',
+              version='0.3',
               description="Open a notebook from the command line in the best available server",
               long_description=readme,
               author='Thomas Kluyver',
