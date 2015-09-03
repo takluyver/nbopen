@@ -13,7 +13,7 @@ except ImportError:
     from IPython.html import notebookapp
     from IPython.html.utils import url_path_join
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 def find_best_server(filename, profile='default'):
     kwargs = {}
