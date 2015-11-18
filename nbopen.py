@@ -8,10 +8,10 @@ import webbrowser
 
 try:
     from notebook import notebookapp
-    from notebook.utils import url_path_join
+    from notebook.utils import url_path_join, url_escape
 except ImportError:
     from IPython.html import notebookapp
-    from IPython.html.utils import url_path_join
+    from IPython.html.utils import url_path_join, url_escape
 
 __version__ = '0.3'
 
@@ -35,7 +35,7 @@ def nbopen(filename, profile='default'):
     if server_inf is not None:
         print("Using existing server at", server_inf['notebook_dir'])
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
-        url = url_path_join(server_inf['url'], 'notebooks', path)
+        url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
         webbrowser.open(url, new=2)
     else:
         if filename.startswith(home_dir):
