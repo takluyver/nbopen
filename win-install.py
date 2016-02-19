@@ -3,7 +3,10 @@ import setup
 
 setup.main(['install', '--user'])
 
-import _winreg as winreg
+try:
+  import winreg
+except ImportError:  
+  import _winreg as winreg
 
 SZ = winreg.REG_SZ
 with winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\Classes\.ipynb") as k:
