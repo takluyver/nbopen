@@ -36,7 +36,9 @@ def nbopen(filename, profile='default'):
         print("Using existing server at", server_inf['notebook_dir'])
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
         url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
-        webbrowser.open(url, new=2)
+        na = notebookapp.NotebookApp.instance()
+        browser = webbrowser.get(na.browser or None)
+        browser.open(url, new=2)
     else:
         if filename.startswith(home_dir):
             nbdir = home_dir
