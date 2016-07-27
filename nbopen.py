@@ -28,7 +28,7 @@ def find_best_server(filename, profile='default'):
         return None
 
 
-def nbopen(filename, profile='default'):
+def nbopen(filename, profile='default', query=''):
     filename = os.path.abspath(filename)
     home_dir = os.path.expanduser('~')
     server_inf = find_best_server(filename, profile)
@@ -36,6 +36,8 @@ def nbopen(filename, profile='default'):
         print("Using existing server at", server_inf['notebook_dir'])
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
         url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
+        if query:
+            url = url + query
         na = notebookapp.NotebookApp.instance()
         na.load_config_file()
         browser = webbrowser.get(na.browser or None)
@@ -47,7 +49,11 @@ def nbopen(filename, profile='default'):
             nbdir = os.path.dirname(filename)
 
         print("Starting new server")
-        notebookapp.launch_new_instance(file_to_run=os.path.abspath(filename),
+        path = os.path.relpath(filename, start=nbdir)
+        notebook_url = url_path_join('notebooks', url_escape(path))
+        if query:
+            notebook_url = notebook_url + query
+        notebookapp.launch_new_instance(default_url=notebook_url,
                                         notebook_dir=nbdir,
                                         open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
@@ -58,10 +64,11 @@ def main(argv=None):
     ap.add_argument('-p', '--profile', default='default',
                     help=argparse.SUPPRESS)
     ap.add_argument('filename', help='The notebook file to open')
-    
+    ap.add_argument('-q', '--query', default='',
+                    help='query string for the notebook url')
     args = ap.parse_args(argv)
 
-    nbopen(args.filename, args.profile)
+    nbopen(args.filename, args.profile, args.query)
 
 if __name__ == '__main__':
     main()
