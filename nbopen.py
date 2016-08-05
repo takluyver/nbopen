@@ -3,6 +3,7 @@
 import argparse
 import os.path
 import sys
+import threading
 import warnings
 import webbrowser
 
@@ -29,35 +30,50 @@ def find_best_server(filename, profile='default'):
 
 
 def nbopen(filename, profile='default', query=''):
+
+    def open_notebook(filename, profile):
+        filename = os.path.abspath(filename)
+        home_dir = os.path.expanduser('~')
+        server_inf = find_best_server(filename, profile)
+        if server_inf is not None:
+            print("Using existing server at", server_inf['notebook_dir'])
+            path = os.path.relpath(filename, start=server_inf['notebook_dir'])
+            url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
+            if query:
+                url = '{}?{}'.format(url, query)
+            na = notebookapp.NotebookApp.instance()
+            na.load_config_file()
+            browser = webbrowser.get(na.browser or None)
+            browser.open(url, new=2)
+        else:
+            raise ValueError('no server available')
+
     filename = os.path.abspath(filename)
     home_dir = os.path.expanduser('~')
     server_inf = find_best_server(filename, profile)
-    if server_inf is not None:
-        print("Using existing server at", server_inf['notebook_dir'])
-        path = os.path.relpath(filename, start=server_inf['notebook_dir'])
-        url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
-        if query:
-            url = url + query
-        na = notebookapp.NotebookApp.instance()
-        na.load_config_file()
-        browser = webbrowser.get(na.browser or None)
-        browser.open(url, new=2)
-    else:
+
+    if server_inf is None:
+        # We could introduce a check, rather than a wait; though this adds
+        # code complication.
+        twait = 4
+        # Open the  requested notebook in the server, once it has opened.
+        t = threading.Timer(twait, open_notebook, args=[filename, profile])
+        t.start()
+        print('z' * twait)
+
         if filename.startswith(home_dir):
             nbdir = home_dir
         else:
             nbdir = os.path.dirname(filename)
 
         print("Starting new server")
-        path = os.path.relpath(filename, start=nbdir)
-        notebook_url = url_path_join('notebooks', url_escape(path))
-        if query:
-            notebook_url = notebook_url + query
-        notebookapp.launch_new_instance(default_url=notebook_url,
-                                        notebook_dir=nbdir,
-                                        open_browser=True,
+        notebookapp.launch_new_instance(notebook_dir=nbdir,
+                                        open_browser=False,
                                         argv=[],  # Avoid it seeing our own argv
-                                       )
+            )
+    else:
+        open_notebook(filename, profile)
+        
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
