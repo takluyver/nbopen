@@ -2,14 +2,15 @@
 
 import argparse
 import os.path
-import sys
 import warnings
 import webbrowser
 
 try:
     from notebook import notebookapp
     from notebook.utils import url_path_join, url_escape
+    import nbformat
 except ImportError:
+    from IPython import nbformat
     from IPython.html import notebookapp
     from IPython.html.utils import url_path_join, url_escape
 
@@ -20,7 +21,7 @@ def find_best_server(filename, profile='default'):
     if profile != 'default':
         warnings.warn("Jupyter doesn't have profiles")
         kwargs['profile'] = profile
-    servers = [si for si in notebookapp.list_running_servers(**kwargs) \
+    servers = [si for si in notebookapp.list_running_servers(**kwargs)
                if filename.startswith(si['notebook_dir'])]
     try:
         return max(servers, key=lambda si: len(si['notebook_dir']))
@@ -51,17 +52,41 @@ def nbopen(filename, profile='default'):
                                         notebook_dir=nbdir,
                                         open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
-                                       )
+                                        )
+
+def nbnew(filename):
+    if os.path.exists(filename):
+        msg = "Notebook {} already exists"
+        print(msg.format(filename))
+        print("Opening existing notebook")
+    elif os.path.exists(filename + '.ipynb'):
+        msg = "A Notebook {} with extension .ipynb already exists"
+        print(msg.format(filename))
+        print("Opening existing notebook")
+        filename += '.ipynb'
+    else:
+        if not filename.endswith('.ipynb'):
+            filename += '.ipynb'
+        nb_version = nbformat.versions[nbformat.current_nbformat]
+        nbformat.write(nb_version.new_notebook(),
+                       filename)
+    return filename
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('-p', '--profile', default='default',
                     help=argparse.SUPPRESS)
+    ap.add_argument('-n', '--new', action='store_true', default=False)
     ap.add_argument('filename', help='The notebook file to open')
-    
+
     args = ap.parse_args(argv)
 
-    nbopen(args.filename, args.profile)
+    if args.new:
+        filename = nbnew(args.filename)
+    else:
+        filename = args.filename
+
+    nbopen(filename, args.profile)
 
 if __name__ == '__main__':
     main()

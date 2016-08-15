@@ -55,8 +55,11 @@ def main(argv=None):
                   "License :: OSI Approved :: BSD License",
                   "Programming Language :: Python :: 2",
                   "Programming Language :: Python :: 3",
-                 ],
-             **extra_options)
+              ],
+              install_requires=[
+                  "nbformat"
+              ],
+              **extra_options)
 
     finally:
         if argv is not None:
