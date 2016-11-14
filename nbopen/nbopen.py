@@ -2,7 +2,6 @@
 
 import argparse
 import os.path
-import warnings
 import webbrowser
 
 from notebook import notebookapp
