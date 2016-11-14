@@ -2,7 +2,6 @@
 
 import argparse
 import os.path
-import sys
 import warnings
 import webbrowser
 
@@ -13,7 +12,7 @@ except ImportError:
     from IPython.html import notebookapp
     from IPython.html.utils import url_path_join, url_escape
 
-__version__ = '0.3'
+__version__ = '0.4'
 
 def find_best_server(filename, profile='default'):
     kwargs = {}

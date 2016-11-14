@@ -13,8 +13,8 @@ Usage::
     nbopen AwesomeNotebook.ipynb
 
 To integrate with your file manager, so you can double click on notebooks
-to open them, clone the repository and run:
+to open them, run:
 
-* Linux/BSD: ``./xdg-install.sh``.
-* Windows: ``python win-install.py``
-* Mac: ``./osx-install.sh``
+* Linux/BSD: ``python -m nbopen.install_xdg``.
+* Windows: ``python -m nbopen.install_win``
+* Mac: Clone the repository and run ``./osx-install.sh``

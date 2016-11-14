@@ -3,8 +3,8 @@ set -e
 
 ./osx-make-iconset.sh
 
-python3 setup.py install
-python3 setup.py py2app
+python3 py2app_setup.py install
+python3 py2app_setup.py py2app
 
 INSTALL_PATH="$HOME/Applications/nbopen.app"
 if [ -e $INSTALL_PATH ]; then

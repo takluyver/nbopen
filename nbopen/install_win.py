@@ -1,7 +1,6 @@
-import sys
-import setup
+"""Install GUI integration on Windows"""
 
-setup.main(['install', '--user'])
+import sys
 
 try:
   import winreg
