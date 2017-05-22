@@ -25,6 +25,8 @@ def nbopen(filename):
     if server_inf is not None:
         print("Using existing server at", server_inf['notebook_dir'])
         path = os.path.relpath(filename, start=server_inf['notebook_dir'])
+        if os.sep != '/':
+            path.replace(os.sep, '/')
         url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
         na = notebookapp.NotebookApp.instance()
         na.load_config_file()
