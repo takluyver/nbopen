@@ -7,8 +7,6 @@ import webbrowser
 from notebook import notebookapp
 from notebook.utils import url_path_join, url_escape
 
-__version__ = '0.4'
-
 def find_best_server(filename):
     servers = [si for si in notebookapp.list_running_servers() \
                if filename.startswith(si['notebook_dir'])]
