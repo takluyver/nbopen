@@ -6,9 +6,10 @@ import webbrowser
 
 from notebook import notebookapp
 from notebook.utils import url_path_join, url_escape
+import nbformat
 
 def find_best_server(filename):
-    servers = [si for si in notebookapp.list_running_servers() \
+    servers = [si for si in notebookapp.list_running_servers()
                if filename.startswith(si['notebook_dir'])]
     try:
         return max(servers, key=lambda si: len(si['notebook_dir']))
@@ -41,15 +42,38 @@ def nbopen(filename):
                                         notebook_dir=nbdir,
                                         open_browser=True,
                                         argv=[],  # Avoid it seeing our own argv
-                                       )
+                                        )
+
+def nbnew(filename):
+    if os.path.exists(filename):
+        msg = "Notebook {} already exists"
+        print(msg.format(filename))
+        print("Opening existing notebook")
+    elif os.path.exists(filename + '.ipynb'):
+        msg = "A Notebook {} with extension .ipynb already exists"
+        print(msg.format(filename))
+        print("Opening existing notebook")
+        filename += '.ipynb'
+    else:
+        if not filename.endswith('.ipynb'):
+            filename += '.ipynb'
+        nb_version = nbformat.versions[nbformat.current_nbformat]
+        nbformat.write(nb_version.new_notebook(),
+                       filename)
+    return filename
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
+    ap.add_argument('-n', '--new', action='store_true', default=False)
     ap.add_argument('filename', help='The notebook file to open')
-    
-    args = ap.parse_args(argv)
 
-    nbopen(args.filename)
+    args = ap.parse_args(argv)
+    if args.new:
+        filename = nbnew(args.filename)
+    else:
+        filename = args.filename
+
+    nbopen(filename)
 
 if __name__ == '__main__':
     main()
