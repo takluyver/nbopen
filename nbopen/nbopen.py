@@ -45,18 +45,13 @@ def nbopen(filename):
                                         )
 
 def nbnew(filename):
+    if not filename.endswith('.ipynb'):
+        filename += '.ipynb'
     if os.path.exists(filename):
         msg = "Notebook {} already exists"
         print(msg.format(filename))
         print("Opening existing notebook")
-    elif os.path.exists(filename + '.ipynb'):
-        msg = "A Notebook {} with extension .ipynb already exists"
-        print(msg.format(filename))
-        print("Opening existing notebook")
-        filename += '.ipynb'
     else:
-        if not filename.endswith('.ipynb'):
-            filename += '.ipynb'
         nb_version = nbformat.versions[nbformat.current_nbformat]
         nbformat.write(nb_version.new_notebook(),
                        filename)
