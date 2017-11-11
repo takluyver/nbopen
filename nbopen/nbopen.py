@@ -59,7 +59,8 @@ def nbnew(filename):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('-n', '--new', action='store_true', default=False)
+    ap.add_argument('-n', '--new', action='store_true', default=False,
+                    help='Create a new notebook file with the given name.')
     ap.add_argument('filename', help='The notebook file to open')
 
     args = ap.parse_args(argv)
