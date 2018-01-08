@@ -7,6 +7,7 @@ import webbrowser
 from notebook import notebookapp
 from notebook.utils import url_path_join, url_escape
 import nbformat
+from traitlets.config import Config
 
 def find_best_server(filename):
     servers = [si for si in notebookapp.list_running_servers()
@@ -38,9 +39,15 @@ def nbopen(filename):
             nbdir = os.path.dirname(filename)
 
         print("Starting new server")
-        notebookapp.launch_new_instance(file_to_run=os.path.abspath(filename),
-                                        notebook_dir=nbdir,
-                                        open_browser=True,
+        # Hack: we want to override these settings if they're in the config file.
+        # The application class allows 'command line' config to override config
+        # loaded afterwards from the config file. So by specifying config, we
+        # can use this mechanism.
+        cfg = Config()
+        cfg.NotebookApp.file_to_run = os.path.abspath(filename)
+        cfg.NotebookApp.notebook_dir = nbdir
+        cfg.NotebookApp.open_browser = True
+        notebookapp.launch_new_instance(config=cfg,
                                         argv=[],  # Avoid it seeing our own argv
                                         )
 
