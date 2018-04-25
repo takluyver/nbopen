@@ -1,8 +1,8 @@
 """Install GUI integration on XDG platforms (primarily Linux)"""
 import os
 from pathlib import Path
-import shutil
 from subprocess import run
+import sys
 
 _PKGDIR = Path(__file__).resolve().parent
 
@@ -27,6 +27,9 @@ run(['xdg-icon-resource', 'forceupdate'], check=True)
 
 print('Installing desktop file...')
 apps_dir = os.path.join(os.environ['XDG_DATA_HOME'], "applications/")
-shutil.copy2(str(_PKGDIR / 'nbopen.desktop'), apps_dir)
+with (_PKGDIR / 'nbopen.desktop').open('r', encoding='utf-8') as f:
+    desktop_contents = f.read().format(PYTHON=sys.executable)
+with Path(apps_dir, 'nbopen.desktop').open('w', encoding='utf-8') as f:
+    f.write(desktop_contents)
 run(['update-desktop-database', apps_dir], check=True)
 

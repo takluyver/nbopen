@@ -19,4 +19,3 @@ to open them, run:
 * Windows: ``python3 -m nbopen.install_win``
 * Mac: Clone the repository and run ``./osx-install.sh``
 
-Ensure that ``nbopen`` is on the profile path (not just terminal, *e.g.* ``.profile`` not ``.bashrc``)

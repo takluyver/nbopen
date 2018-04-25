@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=IPython Notebook
+Name=Jupyter Notebook
 # This is for opening files, not launching the notebook from a menu
 NoDisplay=true
-Exec=nbopen %f
+Exec={PYTHON} -m nbopen %f
 Terminal=false
 MimeType=application/x-ipynb+json;
