@@ -7,3 +7,4 @@ NoDisplay=true
 Exec={PYTHON} -m nbopen %f
 Terminal=false
 MimeType=application/x-ipynb+json;
+Icon=jupyter
