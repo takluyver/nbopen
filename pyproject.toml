@@ -9,7 +9,7 @@ author-email = "thomas@kluyver.me.uk"
 home-page = "https://github.com/takluyver/nbopen"
 description-file = "README.rst"
 requires = [
-    "notebook",
+    "notebook>=7",
     "nbformat",
 ]
 requires-python = ">=3.5"
