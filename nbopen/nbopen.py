@@ -8,7 +8,6 @@ from jupyter_server import serverapp
 from jupyter_server.utils import url_path_join, url_escape
 from notebook import app as notebookapp
 import nbformat
-from traitlets.config import Config
 
 def find_best_server(filename):
     servers = [si for si in serverapp.list_running_servers()
