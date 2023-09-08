@@ -45,9 +45,9 @@ def nbopen(filename):
         # The application class allows 'command line' config to override config
         # loaded afterwards from the config file. So by specifying argv, we
         # can use this mechanism.
-        argv = ["--ServerApp.file_to_run='%s'" % os.path.abspath(filename),
-                "--ServerApp.root_dir='%s'" % nbdir,
-                "--ServerApp.open_browser=True"]
+        argv = ["--ServerApp.file_to_run", os.path.abspath(filename),
+                "--ServerApp.root_dir", nbdir,
+                "--ServerApp.open_browser", "True"]
         notebookapp.launch_new_instance(argv=argv)
 
 def nbnew(filename):
