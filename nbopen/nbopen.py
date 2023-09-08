@@ -4,16 +4,17 @@ import argparse
 import os.path
 import webbrowser
 
-from notebook import notebookapp
-from notebook.utils import url_path_join, url_escape
+from jupyter_server import serverapp
+from jupyter_server.utils import url_path_join, url_escape
+from notebook import app as notebookapp
 import nbformat
 from traitlets.config import Config
 
 def find_best_server(filename):
-    servers = [si for si in notebookapp.list_running_servers()
-               if filename.startswith(si['notebook_dir'])]
+    servers = [si for si in serverapp.list_running_servers()
+               if filename.startswith(si['root_dir'])]
     try:
-        return max(servers, key=lambda si: len(si['notebook_dir']))
+        return max(servers, key=lambda si: len(si['root_dir']))
     except ValueError:
         return None
 
@@ -23,14 +24,15 @@ def nbopen(filename):
     home_dir = os.path.expanduser('~')
     server_inf = find_best_server(filename)
     if server_inf is not None:
-        print("Using existing server at", server_inf['notebook_dir'])
-        path = os.path.relpath(filename, start=server_inf['notebook_dir'])
+        print("Using existing server at", server_inf['root_dir'])
+        path = os.path.relpath(filename, start=server_inf['root_dir'])
         if os.sep != '/':
             path = path.replace(os.sep, '/')
-        url = url_path_join(server_inf['url'], 'notebooks', url_escape(path))
-        na = notebookapp.NotebookApp.instance()
-        na.load_config_file()
-        browser = webbrowser.get(na.browser or None)
+        urlseg = 'tree' if os.path.isdir(filename) else 'notebooks'
+        url = url_path_join(server_inf['url'], urlseg, url_escape(path))
+        sa = serverapp.ServerApp.instance()
+        sa.load_config_file()
+        browser = webbrowser.get(sa.browser or None)
         browser.open(url, new=2)
     else:
         if filename.startswith(home_dir):
@@ -41,15 +43,12 @@ def nbopen(filename):
         print("Starting new server")
         # Hack: we want to override these settings if they're in the config file.
         # The application class allows 'command line' config to override config
-        # loaded afterwards from the config file. So by specifying config, we
+        # loaded afterwards from the config file. So by specifying argv, we
         # can use this mechanism.
-        cfg = Config()
-        cfg.NotebookApp.file_to_run = os.path.abspath(filename)
-        cfg.NotebookApp.notebook_dir = nbdir
-        cfg.NotebookApp.open_browser = True
-        notebookapp.launch_new_instance(config=cfg,
-                                        argv=[],  # Avoid it seeing our own argv
-                                        )
+        argv = ["--ServerApp.file_to_run", os.path.abspath(filename),
+                "--ServerApp.root_dir", nbdir,
+                "--ServerApp.open_browser", "True"]
+        notebookapp.launch_new_instance(argv=argv)
 
 def nbnew(filename):
     if not filename.endswith('.ipynb'):
